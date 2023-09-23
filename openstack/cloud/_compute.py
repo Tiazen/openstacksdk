@@ -703,6 +703,7 @@ class ComputeCloudMixin:
         'config_drive',
         'admin_pass',
         'disk_config',
+        'tags',
     )
     def create_server(
         self,
@@ -800,6 +801,8 @@ class ComputeCloudMixin:
         :param group: ServerGroup dict, name or id to boot the server in.
             If a group is provided in both scheduler_hints and in the group
             param, the group param will win. (Optional, defaults to None)
+        :param tags: tags for vm instance
+
         :returns: The created compute ``Server`` object.
         :raises: OpenStackCloudException on operation error.
         """
@@ -948,6 +951,10 @@ class ComputeCloudMixin:
 
         if volumes is None:
             volumes = []
+        
+        tags = kwargs.get('tags', [])
+        if tags:
+            kwargs['tags'] = tags
 
         # nova cli calls this boot_volume. Let's be the same
         if root_volume and not boot_volume:
